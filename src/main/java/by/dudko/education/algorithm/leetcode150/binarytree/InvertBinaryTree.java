@@ -24,12 +24,12 @@ package by.dudko.education.algorithm.leetcode150.binarytree;
  * -100 <= Node.val <= 100
  */
 public class InvertBinaryTree {
-    public TreeNode invertTree(TreeNode root) {
+    public static TreeNode invertTree(TreeNode root) {
         invertTreeHelper(root);
         return root;
     }
 
-    private void invertTreeHelper(TreeNode root) {
+    private static void invertTreeHelper(TreeNode root) {
         if (root == null) {
             return;
         }

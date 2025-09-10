@@ -24,7 +24,7 @@ package by.dudko.education.algorithm.leetcode150.linkedlists;
  * Follow up: Could you do it in one pass?
  */
 public class ReverseLinkedListII {
-    public ListNode reverseBetween(ListNode head, int left, int right) {
+    public static ListNode reverseBetween(ListNode head, int left, int right) {
         int index = 1;
         ListNode current = null;
         ListNode next = head;

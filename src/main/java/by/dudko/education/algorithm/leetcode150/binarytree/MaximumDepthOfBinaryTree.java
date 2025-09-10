@@ -22,7 +22,7 @@ package by.dudko.education.algorithm.leetcode150.binarytree;
  * -100 <= Node.val <= 100
  */
 public class MaximumDepthOfBinaryTree {
-    public int maxDepth(TreeNode root) {
+    public static int maxDepth(TreeNode root) {
         if (root == null) {
             return 0;
         }

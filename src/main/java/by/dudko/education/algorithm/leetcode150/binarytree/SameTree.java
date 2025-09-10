@@ -26,7 +26,7 @@ package by.dudko.education.algorithm.leetcode150.binarytree;
  * -10^4 <= Node.val <= 10^4
  */
 public class SameTree {
-    public boolean isSameTree(TreeNode first, TreeNode second) {
+    public static boolean isSameTree(TreeNode first, TreeNode second) {
         if (first == null || second == null) {
             return first == second;
         }

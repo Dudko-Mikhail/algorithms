@@ -28,7 +28,7 @@ import java.util.Arrays;
  * 0 <= citations[i] <= 1000
  */
 public class HIndex {
-    public int hIndex(int[] citations) {
+    public static int hIndex(int[] citations) {
         Arrays.sort(citations);
 
         int hIndex = 0;
@@ -42,12 +42,12 @@ public class HIndex {
     }
 
     public static void main(String[] args) {
-        System.out.println(new HIndex().hIndexThroughBinarySearch(new int[]{3, 0, 6, 1, 5}));
-        System.out.println(new HIndex().hIndexThroughBinarySearch(new int[]{0, 0, 2}));
+        System.out.println(hIndexThroughBinarySearch(new int[]{3, 0, 6, 1, 5}));
+        System.out.println(hIndexThroughBinarySearch(new int[]{0, 0, 2}));
     }
 
 
-    public int hIndexThroughBinarySearch(int[] citations) {
+    public static int hIndexThroughBinarySearch(int[] citations) {
         int min = citations[0];
         int max = citations[0];
 
@@ -76,7 +76,7 @@ public class HIndex {
         return hIndex;
     }
 
-    private boolean needHigherIndex(int[] citations, int candidate) {
+    private static boolean needHigherIndex(int[] citations, int candidate) {
         int moreCounter = 0;
         for (int i = 0; i < citations.length; i++) {
             int citation = citations[i];

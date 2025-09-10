@@ -26,7 +26,7 @@ package by.dudko.education.algorithm.leetcode150.linkedlists;
  * Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
  */
 public class ReverseLinkedList {
-    public ListNode reverseList(ListNode head) {
+    public static ListNode reverseList(ListNode head) {
         ListNode current = null;
         ListNode next = head;
 
