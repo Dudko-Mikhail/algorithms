@@ -8,6 +8,13 @@ public final class TreeUtils {
     private TreeUtils() {
     }
 
+    public static boolean isPresentInBinaryTree(TreeNode root, int val) {
+        if (root == null) {
+            return false;
+        }
+        return val > root.val ? isPresentInBinaryTree(root.right, val) : isPresentInBinaryTree(root.left, val);
+    }
+
     public static TreeNode buildBinaryTree(Collection<Integer> collection) {
         if (collection == null) {
             return null;
@@ -76,7 +83,7 @@ public final class TreeUtils {
             for (int j = 0; j < len; j++) {
                 TreeNode node = toVisit.remove();
                 int switcher = 0;
-                for (int k = 0; k < 2; k++) {
+                for (int k = 0; k < 2 && i < values.length; k++) {
                     if (values[i] != null) {
                         if (switcher == 0) {
                             node.left = new TreeNode(values[i]);
