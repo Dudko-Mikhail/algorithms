@@ -1,5 +1,10 @@
 package by.dudko.education.algorithm.leetcode.interview150.intervals;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * https://leetcode.com/problems/merge-intervals/description/?envType=study-plan-v2&envId=top-interview-150
  * <p>
@@ -28,7 +33,27 @@ package by.dudko.education.algorithm.leetcode.interview150.intervals;
  * 0 <= starti <= endi <= 10^4
  */
 public class MergeIntervals {
-    public int[][] merge(int[][] intervals) {
-        return null;
+    public static int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(ints -> ints[0]));
+        List<int[]> nonOverlappingIntervals = new ArrayList<>();
+        int[] current = intervals[0];
+        for (int i = 1; i < intervals.length; i++) {
+            int[] next = intervals[i];
+            if (isIntersects(current, next)) {
+                current = new int[]{current[0], Math.max(current[1], next[1])};
+            } else {
+                nonOverlappingIntervals.add(current);
+                current = next;
+            }
+        }
+
+        if (nonOverlappingIntervals.isEmpty() || nonOverlappingIntervals.getLast() != current) {
+            nonOverlappingIntervals.add(current);
+        }
+        return nonOverlappingIntervals.toArray(int[][]::new);
+    }
+
+    private static boolean isIntersects(int[] first, int[] second) {
+        return second[0] >= first[0] && second[0] <= first[1];
     }
 }
