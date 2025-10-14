@@ -1,10 +1,6 @@
 package by.dudko.education.algorithm.leetcode.interview150.hashmap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * https://leetcode.com/problems/group-anagrams/?envType=study-plan-v2&envId=top-interview-150

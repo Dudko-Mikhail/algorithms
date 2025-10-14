@@ -28,7 +28,7 @@ import java.util.*;
  * -100 <= Node.val <= 100
  */
 public class BinaryTreeZigzagLevelOrderTraversal {
-    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> zigZagTraversal = new ArrayList<>();
         if (root == null) {
             return zigZagTraversal;
@@ -60,5 +60,33 @@ public class BinaryTreeZigzagLevelOrderTraversal {
             zigZagTraversal.add(layer);
         }
         return zigZagTraversal;
+    }
+
+    public static List<List<Integer>> zigzagLevelOrderWithRecursion(TreeNode root) {
+        List<List<Integer>> zigZagTraversal = new ArrayList<>();
+        if (root == null) {
+            return zigZagTraversal;
+        }
+
+        performTraversal(zigZagTraversal, 0, root);
+        return zigZagTraversal;
+    }
+
+    private static void performTraversal(List<List<Integer>> result, int level, TreeNode current) {
+        if (current == null) {
+            return;
+        }
+
+        if (result.size() == level) {
+            result.add(new LinkedList<>());
+        }
+
+        if (level % 2 == 0) {
+            result.get(level).add(current.val);
+        } else {
+            result.get(level).addFirst(current.val);
+        }
+        performTraversal(result, level + 1, current.left);
+        performTraversal(result, level + 1, current.right);
     }
 }

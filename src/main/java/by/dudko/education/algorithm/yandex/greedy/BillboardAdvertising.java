@@ -1,11 +1,6 @@
 package by.dudko.education.algorithm.yandex.greedy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * https://new.contest.yandex.ru/contests/48627/problem?id=215%2F2023_04_08%2F9lIXf3oJtM
