@@ -171,7 +171,26 @@ public final class TreeUtils {
                 }
                 return joiner.toString();
             }
-        };
+        },
+        POST_ORDER {
+            @Override
+            String stringifyTree(TreeNode root, boolean direct, StringJoiner joiner) {
+                Extractors extractor = getExtractorByOrder(direct);
+                helper(root, joiner, extractor);
+                return joiner.toString();
+            }
+
+            private void helper(TreeNode root, StringJoiner joiner, Extractors extractor) {
+                if (root == null) {
+                    return;
+                }
+
+                helper(extractor.first(root), joiner, extractor);
+                helper(extractor.second(root), joiner, extractor);
+                joiner.add(Integer.toString(root.val));
+            }
+        }
+        ;
 
         abstract String stringifyTree(TreeNode root, boolean direct, StringJoiner joiner);
 
