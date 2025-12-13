@@ -3,9 +3,12 @@ package by.dudko.education.algorithm.leetcode.interview150.graph;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * https://leetcode.com/problems/course-schedule-ii/description/?envType=study-plan-v2&envId=top-interview-150
@@ -45,7 +48,7 @@ public class CourseScheduleII {
         Map<Integer, Integer> edgeCount = new HashMap<>();
         for (int[] edge : prerequisites) {
             edgeCount.merge(edge[0], 1, Integer::sum);
-            reverseAdjacencyList.computeIfAbsent(edge[1], k -> new ArrayList<>())
+            reverseAdjacencyList.computeIfAbsent(edge[1], _ -> new ArrayList<>())
                     .add(edge[0]);
         }
         Queue<Integer> toVisit = new ArrayDeque<>();
@@ -65,7 +68,7 @@ public class CourseScheduleII {
                 continue;
             }
             for (int edge : edges) {
-                edgeCount.computeIfPresent(edge, (key, value) -> {
+                edgeCount.computeIfPresent(edge, (_, value) -> {
                     if (value == 1) {
                         toVisit.offer(edge);
                         return null;
@@ -80,39 +83,42 @@ public class CourseScheduleII {
     }
 
 
-    public static int[] findOrder2(int numCourses, int[][] prerequisites) {
-        boolean[][] adjacencyMatrix = new boolean[numCourses][numCourses];
-        Map<Integer, Integer> edgeCount = new HashMap<>();
-        for (int[] edge : prerequisites) {
-            edgeCount.merge(edge[0], 1, Integer::sum);
-            adjacencyMatrix[edge[0]][edge[1]] = true;
-        }
-        Queue<Integer> toVisit = new ArrayDeque<>();
+    public static int[] findOrderWithTopologicalSort(int numCourses, int[][] prerequisites) {
+        List<Integer>[] adjacencyList = new List[numCourses];
         for (int i = 0; i < numCourses; i++) {
-            if (!edgeCount.containsKey(i)) {
-                toVisit.offer(i);
+            adjacencyList[i] = new ArrayList<>();
+        }
+        for (int[] edge : prerequisites) {
+            adjacencyList[edge[0]].add(edge[1]);
+        }
+
+        int[] resultOrder = new int[numCourses];
+        AtomicInteger index = new AtomicInteger(0);
+        Set<Integer> visited = new HashSet<>();
+
+        for (int i = 0; i < numCourses && visited.size() != numCourses; i++) {
+            if (!visited.contains(i) && hasLoopDfs(i, resultOrder, index, adjacencyList, visited, new HashSet<>())) {
+                return new int[0];
             }
         }
 
-        int[] takeOrder = new int[numCourses];
-        int i = 0;
-        while (!toVisit.isEmpty()) {
-            int current = toVisit.poll();
-            takeOrder[i++] = current;
-            for (int j = 0; j < numCourses; j++) {
-                if (adjacencyMatrix[j][current]) {
-                    adjacencyMatrix[j][current] = false;
-                    edgeCount.computeIfPresent(j, (key, value) -> {
-                        if (value == 1) {
-                            toVisit.add(key);
-                            return null;
-                        }
-                        return value - 1;
-                    });
-                }
-            }
-        }
+        return resultOrder;
+    }
 
-        return edgeCount.isEmpty() ? takeOrder : new int[0];
+    private static boolean hasLoopDfs(int current, int[] resultOrder, AtomicInteger index,
+            List<Integer>[] adjacencyList, Set<Integer> visited, Set<Integer> path) {
+        visited.add(current);
+        path.add(current);
+        for (int vertex : adjacencyList[current]) {
+            if (path.contains(vertex)) {
+                return true;
+            }
+            if (!visited.contains(vertex) && hasLoopDfs(vertex, resultOrder, index, adjacencyList, visited, path)) {
+                return true;
+            }
+            path.remove(vertex);
+        }
+        resultOrder[index.getAndIncrement()] = current;
+        return false;
     }
 }

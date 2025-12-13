@@ -1,9 +1,13 @@
 package by.dudko.education.algorithm.leetcode.interview150.graph;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -36,64 +40,43 @@ import java.util.stream.Stream;
  * All the pairs prerequisites[i] are unique.
  */
 public class CourseSchedule {
-    public static boolean canFinish(int numCourses, int[][] prerequisites) {
-        LinkedHashSet<Integer>[] adjacencyList = Stream.iterate(0, i -> i + 1).
-                limit(numCourses)
-                .map(i -> new LinkedHashSet<Integer>())
-                .toArray(LinkedHashSet[]::new);
+    public static boolean canFinishTopologicalSort(int numCourses, int[][] prerequisites) {
+        List<Integer>[] adjacencyList = IntStream.range(0, numCourses)
+                .mapToObj(i -> new ArrayList<>())
+                .toArray(List[]::new);
 
-        LinkedHashSet<Integer> hasEdges = new LinkedHashSet<>();
         for (int[] edge : prerequisites) {
             adjacencyList[edge[0]].add(edge[1]);
-            hasEdges.add(edge[0]);
-            if (adjacencyList[edge[1]].contains(edge[0])) {
+        }
+
+        Set<Integer> visited = new HashSet<>();
+        for (int i = 0; i < numCourses && visited.size() != numCourses; i++) {
+            if (!visited.contains(i) && hasLoopDfs(i, adjacencyList, visited, new HashSet<>())) {
                 return false;
             }
         }
-
-        while (!hasEdges.isEmpty()) {
-            Integer current = hasEdges.getFirst();
-            if (hasLoop(adjacencyList, hasEdges, current)) {
-                return false;
-            }
-        }
-
         return true;
     }
 
-    private static boolean hasLoop(LinkedHashSet<Integer>[] adjacencyList, Set<Integer> hasEdges, int node) {
-        LinkedHashSet<Integer> edges = adjacencyList[node];
-        if (edges.isEmpty()) {
-            hasEdges.remove(node);
-            return false;
-        }
-        int slow = node;
-        int fast = edges.getFirst();
-        while (!adjacencyList[fast].isEmpty() && fast != slow) {
-            slow = adjacencyList[slow].getFirst();
-            fast = adjacencyList[fast].getFirst();
-            if (adjacencyList[fast].isEmpty()) {
-                break;
-            }
-            fast = adjacencyList[fast].getFirst();
-        }
-
-        if (slow == fast) {
+    private static boolean hasLoopDfs(int current, List<Integer>[] adjacencyList, Set<Integer> visited, Set<Integer> path) {
+        if (path.contains(current)) {
             return true;
         }
-
-        slow = node;
-        while (!adjacencyList[slow].isEmpty()) {
-            int temp = adjacencyList[slow].removeFirst();
-            if (adjacencyList[slow].isEmpty()) {
-                hasEdges.remove(slow);
+        if (visited.contains(current)) {
+            return false;
+        }
+        visited.add(current);
+        path.add(current);
+        for (int edge : adjacencyList[current]) {
+            if (hasLoopDfs(edge, adjacencyList, visited, path)) {
+                return true;
             }
-            slow = temp;
+            path.remove(edge);
         }
         return false;
     }
 
-    public static boolean canFinish2(int numCourses, int[][] prerequisites) {
+    public static boolean canFinish(int numCourses, int[][] prerequisites) {
         Queue<Integer>[] adjacencyList = Stream.iterate(0, i -> i + 1).
                 limit(numCourses)
                 .map(i -> new ArrayDeque<Integer>())
@@ -107,7 +90,7 @@ public class CourseSchedule {
 
         while (!hasEdges.isEmpty()) {
             Integer current = hasEdges.getFirst();
-            if (hasLoop2(adjacencyList, hasEdges, current)) {
+            if (hasLoop(adjacencyList, hasEdges, current)) {
                 return false;
             }
         }
@@ -115,7 +98,7 @@ public class CourseSchedule {
         return true;
     }
 
-    private static boolean hasLoop2(Queue<Integer>[] adjacencyList, Set<Integer> hasEdges, int node) {
+    private static boolean hasLoop(Queue<Integer>[] adjacencyList, Set<Integer> hasEdges, int node) {
         Queue<Integer> edges = adjacencyList[node];
         if (edges.isEmpty()) {
             hasEdges.remove(node);
